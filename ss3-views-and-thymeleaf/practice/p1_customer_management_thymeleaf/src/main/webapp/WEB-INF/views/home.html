@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:insert="layout::head">
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+
+<h3>Customer List</h3>
+<p>
+    <a th:href="@{/create}">
+        Tạo mới 1 nhân viên
+    </a>
+</p>
+
+<div th:if="${mess}" class="notify">
+    <p th:text="${mess}">
+
+    </p>
+</div>
+
+<table id="customer">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>View</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="c,status:${customers}">
+        <td th:text="${status.count}"></td>
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.name}"></td>
+        <td th:text="${c.email}"></td>
+        <td th:text="${c.address}"></td>
+        <td>
+            <a th:href="@{/edit/__${c.id}__}">Edit</a>
+            <a th:href="@{delete/__${c.id}__}">Delete</a>
+            <a th:href="@{view/__${c.id}__}">View</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<footer th:replace="layout::footer"></footer>
+
+</body>
+</html>
