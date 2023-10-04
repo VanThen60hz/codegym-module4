@@ -68,6 +68,7 @@ public class CustomerController {
     @GetMapping("/view/{id}")
     public String view(@PathVariable int id, Model model) {
         model.addAttribute("customer", customerService.findById(id));
-        return "delete";
+        return "" +
+                "(";
     }
 }
