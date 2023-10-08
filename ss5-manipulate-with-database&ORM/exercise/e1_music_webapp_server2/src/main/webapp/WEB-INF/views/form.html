@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout::head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header th:replace="layout::header">
+
+</header>
+<!--Content-->
+
+<form class="left-20" method="post" action="/song/save" th:object="${song}"  enctype="multipart/form-data">
+    <input type="hidden" th:field="*{id}">
+    <div class="mb-3 row">
+        <label class="col-2 col-form-label">Song name:</label>
+        <div class="col-10">
+            <input type="text" class="w-75"  th:field="*{name}" placeholder="Product Name"/>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-2 col-form-label">Singer</label>
+        <div class="col-10">
+            <input type="text" class="w-75"  th:field="*{singer}" placeholder="Singer" />
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-2 col-form-label">Type</label>
+        <div class="col-10">
+            <input type="text" class="w-75" th:field="*{type}" placeholder="Type" />
+        </div>
+    </div>
+
+
+    <div class="mb-3 row">
+        <label class="col-2 col-form-label">Song</label>
+        <div class="col-10">
+            <input type="file" name="audio">
+<!--            <input type="file" class="w-75" name="audio" accept=".mp3,.wav,.ogg,.m4p"/>-->
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-12">
+            <button class="btn btn-primary w-25"  type="submit">Save</button>
+        </div>
+    </div>
+
+</form>
+
+
+<footer th:replace="layout::footer">
+
+</footer>
+</body>
+</html>

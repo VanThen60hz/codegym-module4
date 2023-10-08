@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout::head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header th:replace="layout::header">
+
+</header>
+<!--Content-->
+<div style="text-align: center;">
+    <h1>Song List</h1>
+
+    <div><a th:href="@{/song/form}" class="btn btn-primary btn-sm mb-3"> Add New Song </a></div>
+    <br>
+
+
+    <table border="1" class="table table-hover">
+        <thead>
+        <tr class="active">
+            <th>Song Name</th>
+            <th>Singer</th>
+            <th>Type</th>
+            <th>Audio</th>
+            <th> Action</th>
+            <th> Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="song : ${listSong}">
+            <td th:text="${song.name}"></td>
+            <td th:text="${song.singer}"></td>
+            <td th:text="${song.type}"></td>
+
+            <audio controls>
+                <source th:src="${song.songPath}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <td><a th:href="@{/song/form/__${p.id}__}" class="btn btn-primary">Update</a>
+            <td><a th:href="@{/deletesong/{id}(id=${song.id})}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<footer th:replace="layout::footer">
+
+</footer>
+</body>
+</html>
