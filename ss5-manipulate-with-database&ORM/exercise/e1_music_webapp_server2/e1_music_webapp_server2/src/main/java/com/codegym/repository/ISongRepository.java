@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ISongRepository {
     List<Song> findAll();
-    Song add(Song song);
+    Song save(Song song);
     Song findById(int id);
+
+    boolean delete(Song song);
 }

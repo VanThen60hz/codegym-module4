@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface ISongService {
     List<Song> findAll();
-    Song add(Song Song);
+    Song save(Song Song);
     Song findById(int id);
+    boolean delete(Song song);
 }

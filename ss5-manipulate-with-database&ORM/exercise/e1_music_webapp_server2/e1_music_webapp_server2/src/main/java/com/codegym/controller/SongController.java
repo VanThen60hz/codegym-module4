@@ -32,27 +32,40 @@ public class SongController {
 
     @GetMapping(path = {"/form", "/form/{id}"})
     public String newSongForm(Model model, @PathVariable(required = false) String id){
-        model.addAttribute("song", new Song());
+
+        if (id == null) {
+            model.addAttribute("song", new Song());
+        } else {
+            model.addAttribute("song", songService.findById(Integer.parseInt(id)));
+        }
         return "form";
 
     }
 
     @PostMapping("/save")
-    public RedirectView saveProduct(@ModelAttribute("song") Song song,
+    public RedirectView saveSong(@ModelAttribute("song") Song song,
                                     @RequestParam("audio") MultipartFile multipartFile) throws IOException {
 
 
 
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 
         song.setSongs(fileName);
 
-        Song saveSong = songService.add(song);
+        Song saveSong = songService.save(song);
 
         String uploadDir = "song-audios/" + saveSong.getId();
 
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 
         return new RedirectView("/song/list ", true);
+    }
+
+
+    @PostMapping("/delete")
+    public String deleteSong(@RequestParam int id){
+        Song delSong = songService.findById(id);
+        songService.delete(delSong);
+        return "redirect:/song/list";
     }
 }

@@ -22,7 +22,7 @@ public class SongRepository implements ISongRepository {
     }
 
     @Override
-    public Song add(Song song) {
+    public Song save(Song song) {
         Session session = ConnectionUtil.sessionFactory.openSession();
         Transaction transaction = session.getTransaction();
         try {
@@ -43,5 +43,24 @@ public class SongRepository implements ISongRepository {
         return query.getSingleResult();
     }
 
+    @Override
+    public boolean delete(Song song) {
+        Session session = ConnectionUtil.sessionFactory.openSession();
+        Transaction transaction = session.getTransaction();
+        try {
+            transaction.begin();
+            session.delete(song);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace(); // Handle the exception properly in your application
+            return false;
+        } finally {
+            session.close();
+        }
+    }
 
 }

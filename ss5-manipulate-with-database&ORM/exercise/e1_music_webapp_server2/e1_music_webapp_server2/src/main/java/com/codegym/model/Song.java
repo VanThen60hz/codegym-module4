@@ -28,7 +28,7 @@ public class Song {
     public String getSongPath() {
         if (songs == null) return null;
 
-        return "song-songs" + id + "/" + songs;
+        return "/song-audios/" + id + "/" + songs;
     }
 
     public int getId() {

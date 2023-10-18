@@ -19,12 +19,17 @@ public class SongService implements ISongService {
     }
 
     @Override
-    public Song add(Song song) {
-        return songRepository.add(song);
+    public Song save(Song song) {
+        return songRepository.save(song);
     }
 
     @Override
     public Song findById(int id) {
         return songRepository.findById(id);
+    }
+
+    @Override
+    public boolean delete(Song song) {
+        return songRepository.delete(song);
     }
 }
