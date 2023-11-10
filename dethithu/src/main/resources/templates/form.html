@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout::head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header th:replace="layout::header">
+
+</header>
+<div style="text-align: center">
+    <h1>Stadium Form</h1>
+    <br>
+    <p th:if="${message}" th:text="${message}" class="text-danger"></p>
+    <br>
+    <form class="left-20" method="post" action="/stadium/save" th:object="${stadium}">
+        <input type="hidden" th:field="*{id}">
+        <div class="mb-3 row">
+            <label class="col-2 col-form-label">Tên sân:</label>
+            <div class="col-10">
+                <input type="text" class="w-75" th:field="*{name}" placeholder="Tên sân" required/>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label class="col-2 col-form-label">Địa chỉ:</label>
+            <div class="col-10">
+                <input type="text" class="w-75" th:field="*{address}" placeholder="Địa chỉ" required/>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label class="col-2 col-form-label">Khu vực:</label>
+            <div class="col-10">
+                <select class="w-75" th:field="*{area}" required>
+                    <option value="">--Khu vực--</option>
+                    <option th:each="area : ${areaValues}"
+                            th:value="${area}" th:text="${area.getDisplayName()}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label class="col-2 col-form-label">Loại sân:</label>
+            <div class="col-10">
+                <select class="w-75" th:field="*{fieldType}" required>
+                    <option value="">--Loại sân--</option>
+                    <option th:each="fieldType : ${fieldTypeValues}"
+                            th:value="${fieldType}" th:text="${fieldType.getDisplayName()}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label class="col-2 col-form-label">Thời gian thuê:</label>
+            <div class="col-10">
+                <select class="w-75" th:field="*{rentalTimeSlot}" required>
+                    <option value="">--Thời gian thuê--</option>
+                    <option th:each="rentalTimeSlot : ${rentalTimeSlotValues}"
+                            th:value="${rentalTimeSlot}"
+                            th:text="${rentalTimeSlot.getTimeRange() + ' giá là ' + rentalTimeSlot.price} + ' VND'"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <div class="col-5">
+            </div>
+            <div class="col-6 d-flex justify-content-around">
+                <button class="btn btn-primary w-25" type="submit" id="save-button">Save</button>
+                <a th:href="@{/stadium}" class="btn btn-secondary">Do nothing? Back to Home</a>
+            </div>
+            <div class="col-1"></div>
+        </div>
+
+    </form>
+</div>
+<br>
+<footer th:replace="layout::footer">
+
+</footer>
+
+<script>
+    $(document).ready(function () {
+        let path = window.location.pathname;
+        if (path.includes("detail")) {
+            $("input").prop("disabled", true);
+            $("select").prop("disabled", true);
+            $("#save-button").hide();
+        }
+    });
+</script>
+</body>
+</html>

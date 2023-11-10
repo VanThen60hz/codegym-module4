@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout::head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header th:replace="layout::header">
+
+</header>
+<div style="text-align: center">
+    <h1>Stadium List</h1>
+    <br>
+    <div><a th:href="@{/stadium/create}" class="btn btn-primary btn-sm mb-3"> Add New Stadium </a></div>
+    <form th:action="@{/stadium}" method="get" class="d-flex justify-content-between"
+          style="width: 80%; margin-left: 10%">
+        <input type="text" th:name="nameSearch" th:value="${nameSearch}" class="form-control"
+               placeholder="Search by Name"
+               style="margin-right: 10px">
+        <select th:name="areaSearch" class="form-control" style="margin-right: 10px">
+            <option value="">--Khu vực--</option>
+            <option th:each="area : ${areaValues}"
+                    th:value="${area}" th:text="${area.getDisplayName()}"
+                    th:selected="${area == areaSearch}"></option>
+        </select>
+
+        <select th:name="fieldTypeSearch" class="form-control" style="margin-right: 10px">
+            <option value="">--Loại sân--</option>
+            <option th:each="fieldType : ${fieldTypeValues}"
+                    th:value="${fieldType}" th:text="${fieldType.getDisplayName()}"
+                    th:selected="${fieldType == fieldTypeSearch}"></option>
+        </select>
+        <button type="submit" class="btn btn-primary d-inline">Search</button>
+    </form>
+
+    <br>
+    <p th:if="${message}" th:text="${message}" class="text-success"></p>
+    <br>
+
+
+    <table class="table table-striped" style="width: 90%; margin-left: 5%">
+        <tr>
+            <th>Tên sân</th>
+            <th>Địa chỉ</th>
+            <th>Khu vực</th>
+            <th>Thời gian thuê</th>
+            <th>Giá</th>
+            <th>Loại sân</th>
+            <th>Chức năng</th>
+
+        </tr>
+        <th:block th:each="stadium: ${stadiums}">
+            <tr>
+                <td th:text="${stadium.name}"></td>
+                <td th:text="${stadium.address}"></td>
+                <td th:text="${stadium.area.getDisplayName()}"></td>
+                <td th:text="${stadium.rentalTimeSlot.getTimeRange()}"></td>
+                <td th:text="${stadium.rentalTimeSlot.getPrice()}"></td>
+                <td th:if="${stadium.fieldType}" th:text="${stadium.fieldType.getDisplayName()}"></td>
+                <td>
+                    <a th:href="@{stadium/detail/__${stadium.id}__ }" class="btn btn-info">Chi tiết</a>
+                    <a th:href="@{stadium/edit/__${stadium.id}__ }" class="btn btn-secondary">Chỉnh sửa</a>
+                    <a th:attr="data-delete-id=${stadium.id}, data-delete-name=${stadium.name}"
+                       class="btn btn-danger delete-link" href="#">Xoá</a>
+            </tr>
+        </th:block>
+    </table>
+    <div>
+        <a class="btn btn-primary" th:if="${stadiums.hasPrevious()}"
+           th:href="@{/stadium(page=${stadiums.number - 1}, nameSearch=${nameSearch}, areaSearch=${areaSearch}, fieldTypeSearch=${fieldTypeSearch})}">Previous</a>
+        <span th:text="${stadiums.number + 1}"></span>/<span th:text="${stadiums.totalPages}"></span>
+        <a class="btn btn-primary" th:if="${stadiums.hasNext()}"
+           th:href="@{/stadium(page=${stadiums.number + 1}, nameSearch=${nameSearch}, areaSearch=${areaSearch}, fieldTypeSearch=${fieldTypeSearch})}">Next</a>
+    </div>
+</div>
+
+<!-- Thêm modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xoá</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xoá sân <span id="stadiumNameSpan" class="text-danger"></span>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <a id="deleteLink" href="#" class="btn btn-danger">Xoá</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $(".delete-link").click(function () {
+            let deleteId = $(this).data("delete-id");
+            let deleteUrl = "/stadium" + "/delete/" + deleteId;
+            let deleteName = $(this).data("delete-name");
+            // Cập nhật tên sân trong modal
+            $("#stadiumNameSpan").text(deleteName);
+            $("#deleteLink").attr("href", deleteUrl); // Cập nhật liên kết xoá trong modal
+            $("#deleteModal").modal("show"); // Mở modal
+        });
+
+
+    });
+
+</script>
+<br>
+<footer th:replace="layout::footer">
+
+</footer>
+</body>
+</html>
