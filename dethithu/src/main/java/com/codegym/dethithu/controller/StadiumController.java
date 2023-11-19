@@ -101,6 +101,9 @@ public class StadiumController {
             // Handle validation errors
             // Return the view containing the form
             redirectAttributes.addFlashAttribute("message", "Stadium saved faithfully!");
+            if (stadium.getId() == null) {
+                return "redirect:/stadium/create";
+            }
             return "redirect:/stadium/edit/" + stadium.getId();
         }
 
