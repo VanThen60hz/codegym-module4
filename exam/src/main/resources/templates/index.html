@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout::head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header th:replace="layout::header">
+
+</header>
+<div style="text-align: center">
+    <h1>Question List</h1>
+    <br>
+    <div><a th:href="@{/question/create}" class="btn btn-primary btn-sm mb-3"> Add New Question </a></div>
+    <form th:action="@{/question}" method="get" class="d-flex justify-content-between"
+          style="width: 80%; margin-left: 10%">
+        <input type="text" th:name="titleSearch" th:value="${titleSearch}" class="form-control"
+               placeholder="Search by Title"
+               style="margin-right: 10px">
+        <select th:name="typeSearch" class="form-control" style="margin-right: 10px">
+            <option value="">--Loại câu hỏi--</option>
+            <option th:each="type : ${typeValues}"
+                    th:value="${type}" th:text="${type.getName()}"
+                    th:selected="${type == typeSearch}"></option>
+        </select>
+
+        <button type="submit" class="btn btn-primary d-inline">Search</button>
+    </form>
+
+
+    <br>
+    <p th:if="${message}" th:text="${message}" class="text-success"></p>
+    <br>
+
+    <table class="table table-striped" style="width: 90%; margin-left: 5%">
+        <tr>
+            <th>Tiêu đề</th>
+            <th>Nội dung</th>
+            <th>Câu trả lời</th>
+            <th>Tình trạng</th>
+            <th>Ngày tạo</th>
+            <th>Loại câu hỏi</th>
+            <th>Chức năng</th>
+
+        </tr>
+        <th:block th:each="question: ${questions}">
+            <tr>
+                <td th:text="${question.title}"></td>
+                <td th:text="${question.content}"></td>
+                <td th:text="${question.answer}"></td>
+                <td th:switch="${question.status}">
+                    <span th:case="0">Chờ phản hồi</span>
+                    <span th:case="1">Đã phản hồi</span>
+                    <span th:case="*">Không có thông báo</span>
+                </td>
+                <td th:text="${question.createdDate}"></td>
+                <td th:if="${question.type.getName()}" th:text="${question.type.getName()}"></td>
+                <td>
+                    <a th:href="@{question/detail/__${question.id}__ }" class="btn btn-info">Chi tiết</a>
+                    <a th:href="@{question/edit/__${question.id}__ }" class="btn btn-secondary">Chỉnh sửa</a>
+                    <a th:attr="data-delete-id=${question.id}, data-delete-name=${question.title}"
+                       class="btn btn-danger delete-link" href="#">Xoá</a>
+            </tr>
+        </th:block>
+    </table>
+
+    <!--Phân trang-->
+    <div>
+        <a class="btn btn-primary" th:if="${questions.hasPrevious()}"
+           th:href="@{/question(page=${questions.number - 1}, titleSearch=${titleSearch}, typeSearch=${typeSearch})}">Previous</a>
+        <span th:text="${questions.number + 1}"></span>/<span th:text="${questions.totalPages}"></span>
+        <a class="btn btn-primary" th:if="${questions.hasNext()}"
+           th:href="@{/question(page=${questions.number + 1}, titleSearch=${titleSearch}, typeSearch=${typeSearch})}">Next</a>
+    </div>
+</div>
+<!-- Thêm modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xoá</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xoá <span id="nameSpan" class="text-danger"></span>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <a id="deleteLink" href="#" class="btn btn-danger">Xoá</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $(".delete-link").click(function () {
+            let deleteId = $(this).data("delete-id");
+            let deleteUrl = "/question" + "/delete/" + deleteId;
+            let deleteName = $(this).data("delete-name");
+            // Cập nhật tên sân trong modal
+            $("#nameSpan").text(deleteName);
+            $("#deleteLink").attr("href", deleteUrl); // Cập nhật liên kết xoá trong modal
+            $("#deleteModal").modal("show"); // Mở modal
+        });
+
+
+    });
+
+</script>
+<br>
+<footer th:replace="layout::footer">
+
+</footer>
+</body>
+</html>
