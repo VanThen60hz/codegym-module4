@@ -9,7 +9,7 @@
 
 </header>
 <div style="text-align: center">
-    <h1>Create Form</h1>
+    <h1>Tạo mới câu hỏi</h1>
     <br>
     <p th:if="${message}" th:text="${message}" class="text-danger"></p>
     <br>
@@ -44,9 +44,9 @@
         <div class="mb-3 row">
             <div class="col-5">
             </div>
-            <div class="col-6 d-flex justify-content-around">
-                <button class="btn btn-primary w-25" type="submit" id="save-button">Save</button>
-                <a th:href="@{/question}" class="btn btn-secondary">Do nothing? Back to Home</a>
+            <div class="col-6 ">
+                <a th:href="@{/question}" class="btn btn-secondary">Hủy</a>
+                <button class="btn btn-primary" type="submit" id="save-button">Tạo câu hỏi</button>
             </div>
             <div class="col-1"></div>
         </div>
