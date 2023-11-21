@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -42,10 +43,10 @@ public class QuestionController {
 
     @GetMapping
     public ModelAndView listQuestions(@PageableDefault(size = 3, page = 0, sort = "createdDate", direction = Sort.Direction.ASC) Pageable pageable,
-                                      @RequestParam(name = "titleSearch",defaultValue = "", required = false) String titleSearch,
-                                      @RequestParam(name = "typeSearch",defaultValue = "", required = false) String typeSearch
+                                      @RequestParam(name = "titleSearch", defaultValue = "", required = false) String titleSearch,
+                                      @RequestParam(name = "typeSearch", defaultValue = "", required = false) String typeSearch
     ) {
-        Page<Question> questions = questionService.findByTittleContainingAndType_NameContaining(titleSearch,typeSearch,pageable);
+        Page<Question> questions = questionService.findByTittleContainingAndType_NameContaining(titleSearch, typeSearch, pageable);
         ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("questions", questions);
         modelAndView.addObject("titleSearch", titleSearch);
@@ -57,12 +58,12 @@ public class QuestionController {
     public ModelAndView createForm(@Valid @ModelAttribute QuestionDto questionDto, BindingResult bindingResult, RedirectAttributes redirectAttributes, ModelAndView modelAndView) {
         modelAndView.setViewName("create");
 
-            System.out.println("id null");
-            modelAndView.addObject("question", new Question());
+        System.out.println("id null");
+        modelAndView.addObject("question", new Question());
         return modelAndView;
     }
 
-    @GetMapping(path = {"edit/{id}", "detail/{id}"})
+    @GetMapping(path = {"edit/{id}", })
     public ModelAndView form(@Valid @ModelAttribute QuestionDto questionDto, BindingResult bindingResult, RedirectAttributes redirectAttributes, ModelAndView modelAndView, @PathVariable(required = false) String id) {
         modelAndView.setViewName("edit");
 
@@ -79,14 +80,25 @@ public class QuestionController {
         return modelAndView;
     }
 
+    @GetMapping(path = {"detail/{id}"})
+    public String form(Model model, @PathVariable(required = false) String id) {
+
+        Optional<Question> foundQuestion = questionService.findById(Integer.parseInt(id));
+        if (foundQuestion.isEmpty()) {
+            throw new NotFoundException("Question with id " + id + " not found");
+        }
+        model.addAttribute("question", foundQuestion);
+        return "detail";
+    }
+
     @GetMapping("delete/{id}")
-    public String deleteForm(@PathVariable String id,  RedirectAttributes redirectAttributes) {
+    public String deleteForm(@PathVariable String id, RedirectAttributes redirectAttributes) {
         Optional<Question> foundQuestion = questionService.findById(Integer.parseInt(id));
         if (foundQuestion.isEmpty()) {
             throw new NotFoundException("Question with id " + id + " not found");
         }
         questionService.remove(Integer.parseInt(id));
-        redirectAttributes.addFlashAttribute("message", "Question deleted successfully!");
+        redirectAttributes.addFlashAttribute("message", "Xoá câu hỏi thành công!");
         return "redirect:/question";
     }
 
@@ -99,14 +111,12 @@ public class QuestionController {
             // Return the view containing the form
             String errorMessage = Objects.requireNonNull(result.getFieldError()).getDefaultMessage();
             redirectAttributes.addFlashAttribute("message", errorMessage);
-//            redirectAttributes.addFlashAttribute("message", "Stadium saved faithfully!");
 
-            if(questionDto.getId() == null){
+            if (questionDto.getId() == null) {
                 return "redirect:/question/create";
             }
             return "redirect:/question/edit/" + questionDto.getId();
         }
-
 
 
         Question newQuestion = new Question();
@@ -120,7 +130,7 @@ public class QuestionController {
 
         questionService.save(newQuestion);
 
-        redirectAttributes.addFlashAttribute("message", "Stadium saved successfully!");
+        redirectAttributes.addFlashAttribute("message", "Câu hỏi đã được lưu vào danh sách!");
         return "redirect:/question";
     }
 

@@ -9,7 +9,7 @@
 
 </header>
 <div style="text-align: center">
-    <h1>Tạo mới câu hỏi</h1>
+    <h1>Edit Form</h1>
     <br>
     <p th:if="${message}" th:text="${message}" class="text-danger"></p>
     <br>
@@ -30,6 +30,13 @@
         </div>
 
         <div class="mb-3 row">
+            <label class="col-2 col-form-label">Câu trả lời:</label>
+            <div class="col-10">
+                <textarea rows="5" type="text" class="w-75" th:field="*{answer}" placeholder="Câu trả lời" required></textarea>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
             <label class="col-2 col-form-label">Loại câu hỏi</label>
             <div class="col-10">
                 <select class="w-75" th:field="*{type}" required>
@@ -40,13 +47,25 @@
             </div>
         </div>
 
+<!--        <div class="mb-3 row">-->
+<!--            <label class="col-2 col-form-label">Tình trạng</label>-->
+<!--            <div class="col-10">-->
+<!--                <select class="w-75" th:field="*{status}" required>-->
+<!--                    <option value="">&#45;&#45;Tình trạng&#45;&#45;</option>-->
+<!--                    <option value="0">Chờ phản hồi</option>-->
+<!--                    <option value="1">Đã phản hồi</option>-->
+<!--                    <option value="2">Không có thông báo</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+
 
         <div class="mb-3 row">
             <div class="col-5">
             </div>
-            <div class="col-6 ">
-                <a th:href="@{/question}" class="btn btn-secondary">Hủy</a>
-                <button class="btn btn-primary" type="submit" id="save-button">Tạo câu hỏi</button>
+            <div class="col-6 d-flex justify-content-around">
+                <button class="btn btn-primary w-25" type="submit" id="save-button">Save</button>
+                <a th:href="@{/question}" class="btn btn-secondary">Do nothing? Back to Home</a>
             </div>
             <div class="col-1"></div>
         </div>

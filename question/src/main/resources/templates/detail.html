@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout::head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header th:replace="layout::header">
+
+</header>
+<div style="text-align: center">
+    <h1>Xem chi tiết câu hỏi</h1>
+    <br>
+    <p th:if="${message}" th:text="${message}" class="text-danger"></p>
+    <br>
+    <div style="width: 70%; margin: 0 auto">
+        <div class="mb-3 row">
+            <label class="col-2 col-form-label"><b>Tiêu đề:</b></label>
+            <div class="col-10">
+                <p th:text="${question.get().title}"></p>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label class="col-2 col-form-label"><b>Nội dung:</b></label>
+            <div class="col-10">
+                <p th:text="${question.get().content}"></p>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label class="col-2 col-form-label"><b>Phản hồi:</b></label>
+            <div class="col-10">
+                <p th:text="${question.get().answer}"></p>
+                <p th:unless="${question.get().answer}">N/A</p>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label class="col-2 col-form-label"><b>Loại câu hỏi:</b></label>
+            <div class="col-10">
+                <p th:text="${question.get().type.getName()}"></p>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label class="col-2 col-form-label"><b>Tình trạng:</b></label>
+            <div class="col-10">
+                <p th:if="${question.get().status == 0}">Chờ phản hồi</p>
+                <p th:if="${question.get().status == 1}">Đã phản hồi</p>
+                <p th:if="${question.get().status != 0 && question.get().status != 1}">Đã phản hồi</p>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <a th:href="@{/question}" class="btn btn-secondary">Đóng</a>
+
+</div>
+<br>
+<footer th:replace="layout::footer">
+
+</footer>
+
+<script>
+    $(document).ready(function () {
+        let path = window.location.pathname;
+        if (path.includes("detail")) {
+            $("input").prop("disabled", true);
+            $("select").prop("disabled", true);
+            $("textarea").prop("disabled", true);
+            $("#save-button").hide();
+        }
+    });
+</script>
+</body>
+</html>
